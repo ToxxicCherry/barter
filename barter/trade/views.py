@@ -18,9 +18,11 @@ class TradeOffersView(APIView):
             'items_offered__pk',
             'items_offered__name',
             'items_offered__description',
+            'items_offered__image_url',
             'items_offered_quantity',
             'items_requested__pk',
             'items_requested__name',
+            'items_requested__image_url',
             'items_requested_quantity',
             'created_at'
         )
