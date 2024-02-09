@@ -16,42 +16,50 @@ class Item(models.Model):
 
 
 class Inventory(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Пользователь")
-    items = models.ManyToManyField('Item', related_name='inventories', through='InventoryItem', verbose_name="Предметы в инвентаре")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inventory_items', verbose_name="Пользователь")
+    item = models.ForeignKey('Item', on_delete=models.CASCADE, verbose_name="Предмет")
+    quantity = models.PositiveIntegerField(default=0, verbose_name="Количество")
+
 
     def __str__(self):
-        return f"Inventar of {self.user.username}"
+        return f"{self.item.name} in {self.user.username}'s inventory"
 
     class Meta:
         verbose_name = "Инвентарь"
         verbose_name_plural = "Инвентари"
 
 
-class InventoryItem(models.Model):
-    inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE, verbose_name="Инвентарь")
-    item = models.ForeignKey('Item', on_delete=models.CASCADE, verbose_name="Предмет")
-    quantity = models.PositiveIntegerField(default=0, verbose_name="Количество")
-
-    def __str__(self):
-        return f"{self.item.name} in {self.inventory.user.username}'s inventory"
-
-    class Meta:
-        verbose_name = "Элемент инвентаря"
-        verbose_name_plural = "Элементы инвентаря"
+# class InventoryItem(models.Model):
+#     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE, verbose_name="Инвентарь")
+#     item = models.ForeignKey('Item', on_delete=models.CASCADE, verbose_name="Предмет")
+#     quantity = models.PositiveIntegerField(default=0, verbose_name="Количество")
+#
+#     def __str__(self):
+#         return f"{self.item.name} in {self.inventory.user.username}'s inventory"
+#
+#     class Meta:
+#         verbose_name = "Элемент инвентаря"
+#         verbose_name_plural = "Элементы инвентаря"
 
 
 class TradeOffer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
-    title = models.CharField(max_length=255, verbose_name="Заголовок предложения")
-    description = models.TextField(verbose_name="Описание предложения")
-    items_offered = models.ManyToManyField('Item', related_name='trade_offers_offered', verbose_name="Предлагаемые предметы")
-    items_offered_quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
-    items_requested = models.ManyToManyField('Item', related_name='trade_offers_requested', verbose_name="Желаемые предметы")
-    items_requested_quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
+    item_offered = models.ForeignKey(
+        'Item',
+        on_delete=models.CASCADE,
+        related_name='trade_offers_offered',
+        verbose_name="Предлагаемый предмет")
+    item_offered_quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
+    item_requested = models.ForeignKey(
+        'Item',
+        on_delete=models.CASCADE,
+        related_name='trade_offers_requested',
+        verbose_name="Желаемый предмет")
+    item_requested_quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     def __str__(self):
-        return f"Предложение обмена от {self.user.username}: {self.title}"
+        return f"Предложение обмена от {self.user.username}"
 
     class Meta:
         verbose_name = "Предложение обмена"
