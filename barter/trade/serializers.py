@@ -30,3 +30,9 @@ class CancelOfferSerializer(serializers.Serializer):
     offer_id = serializers.IntegerField()
     item_offered_id = serializers.IntegerField()
     item_offered_quantity = serializers.IntegerField()
+
+
+class PurchaseSerializer(serializers.Serializer):
+    buyer_id = serializers.IntegerField()
+    seller_id = serializers.IntegerField()
+    offer_id = serializers.IntegerField()

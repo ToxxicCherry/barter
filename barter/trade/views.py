@@ -37,3 +37,11 @@ class CancelOffer(APIView):
             )
             return Response({'response': 'success'})
         return Response({'response': 'invalid data'})
+
+
+class Purchase(APIView):
+    def post(self, request):
+        serialized_data = PurchaseSerializer(data=request.data)
+        if serialized_data.is_valid():
+            return Response({'response': purchase(serialized_data.validated_data)})
+        return Response({'response': 'invalid data'})
