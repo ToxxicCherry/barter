@@ -1,6 +1,6 @@
 from trade.models import Inventory, Item, TradeOffer
 from trade.serializers import PurchaseSerializer
-from trade.services.utilities import item_in_inventory, enough_items, give_item_to_user
+from trade.services.utilities import item_in_inventory, enough_items, give_item_to_user, delete_offer
 from django.db import transaction
 from django.db.models import F
 
@@ -43,5 +43,5 @@ def purchase(data: PurchaseSerializer.validated_data) -> str:
     )
 
     #Удаляем Offer
-    TradeOffer.objects.get(pk=data.get('offer_id')).delete()
+    delete_offer(offer_id=data.get('offer_id'))
     return 'success'

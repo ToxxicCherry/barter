@@ -19,9 +19,9 @@ class UserInventory(APIView):
 
 class AddOffer(APIView):
     def post(self, request):
-        data = AddOfferSerializer(data=request.data)
-        if data.is_valid():
-            return Response({'response': addoffer(data.validated_data)})
+        serialized_data = AddOfferSerializer(data=request.data)
+        if serialized_data.is_valid():
+            return Response({'response': addoffer(serialized_data.validated_data)})
         return Response({'response': 'invalid data'})
 
 
