@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from trade.models import Inventory
 
 
 class TradeOffersSerializer(serializers.Serializer):
@@ -18,7 +19,6 @@ class TradeOffersSerializer(serializers.Serializer):
 
 
 class AddOfferSerializer(serializers.Serializer):
-    user_id = serializers.IntegerField()
     item_offered_id = serializers.IntegerField()
     item_offered_quantity = serializers.IntegerField()
     item_requested_id = serializers.IntegerField()
@@ -26,13 +26,20 @@ class AddOfferSerializer(serializers.Serializer):
 
 
 class CancelOfferSerializer(serializers.Serializer):
-    user_id = serializers.IntegerField()
+    #user_id = serializers.IntegerField()
     offer_id = serializers.IntegerField()
     item_offered_id = serializers.IntegerField()
     item_offered_quantity = serializers.IntegerField()
 
 
 class PurchaseSerializer(serializers.Serializer):
-    buyer_id = serializers.IntegerField()
-    seller_id = serializers.IntegerField()
     offer_id = serializers.IntegerField()
+
+
+class UserInventorySerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+    item__name = serializers.CharField()
+    quantity = serializers.IntegerField()
+    # class Meta:
+    #     model = Inventory
+    #     fields = '__all__'

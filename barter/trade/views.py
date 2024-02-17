@@ -1,47 +1,68 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .services import *
 from .serializers import *
+from barter.helper import query_debugger
 # Create your views here.
 
 
 class TradeOffersView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    @query_debugger
     def get(self, _):
         return Response({'offers': TradeOffersSerializer(get_offers(), many=True).data})
 
 
 class UserInventory(APIView):
+    permission_classes = (IsAuthenticated, )
 
-    def get(self, request, user_id):
-
-        return Response({'response': get_users_inventory(user_id)})
+    @query_debugger
+    def get(self, request):
+        return Response({
+            'response':
+                UserInventorySerializer(
+                    get_users_inventory(request.user.id),
+                    many=True
+                ).data
+        })
 
 
 class AddOffer(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    @query_debugger
     def post(self, request):
         serialized_data = AddOfferSerializer(data=request.data)
         if serialized_data.is_valid():
-            return Response({'response': addoffer(serialized_data.validated_data)})
+            return Response({'response': addoffer(serialized_data.validated_data, request.user.id)})
         return Response({'response': 'invalid data'})
 
 
 class CancelOffer(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    @query_debugger
     def post(self, request):
         serialized_data = CancelOfferSerializer(data=request.data)
         if serialized_data.is_valid():
-            canceloffer(
-                user_id=serialized_data.validated_data.get('user_id'),
-                offer_id=serialized_data.validated_data.get('offer_id'),
-                item_id=serialized_data.validated_data.get('item_offered_id'),
-                item_quantity=serialized_data.validated_data.get('item_offered_quantity')
-            )
+            canceloffer(serialized_data.validated_data, request.user.id)
             return Response({'response': 'success'})
         return Response({'response': 'invalid data'})
 
 
 class Purchase(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    @query_debugger
     def post(self, request):
         serialized_data = PurchaseSerializer(data=request.data)
         if serialized_data.is_valid():
-            return Response({'response': purchase(serialized_data.validated_data)})
+            return Response({
+                'response': purchase(
+                    serialized_data.validated_data,
+                    request.user.id
+                )
+            })
         return Response({'response': 'invalid data'})

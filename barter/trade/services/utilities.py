@@ -58,6 +58,28 @@ def give_item_to_user(
     obj.save()
 
 
+def take_away_item_from_user(
+        user_id: int | str,
+        item_id: int | str,
+        quantity: int
+) -> None:
+
+    obj = Inventory.objects.get(
+        user__pk=user_id,
+        item__pk=item_id,
+    )
+    obj.quantity = F('quantity') - quantity
+    obj.save()
+
+    obj = Inventory.objects.get(
+        user__pk=user_id,
+        item__pk=item_id,
+    )
+    if obj.quantity == 0:
+        obj.delete()
+        obj.save()
+
+
 
 
 

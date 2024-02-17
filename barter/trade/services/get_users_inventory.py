@@ -3,10 +3,10 @@ from trade.models import Inventory
 
 
 def get_users_inventory(user_id: int) -> dict:
-    user = {'items': Inventory.objects.filter(user__id=user_id).values(
-        'item__pk',
+    user = User.objects.get(pk=user_id)
+    return user.inventory_items.values(
+        'pk',
+        'item__name',
         'quantity'
-    ),
-        'user_id': user_id}
-    user.update(User.objects.values('username').get(pk=user_id))
-    return user
+    )
+

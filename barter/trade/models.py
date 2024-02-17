@@ -20,26 +20,12 @@ class Inventory(models.Model):
     item = models.ForeignKey('Item', on_delete=models.CASCADE, verbose_name="Предмет")
     quantity = models.PositiveIntegerField(default=0, verbose_name="Количество")
 
-
     def __str__(self):
         return f"{self.item.name} in {self.user.username}'s inventory"
 
     class Meta:
         verbose_name = "Инвентарь"
         verbose_name_plural = "Инвентари"
-
-
-# class InventoryItem(models.Model):
-#     inventory = models.ForeignKey('Inventory', on_delete=models.CASCADE, verbose_name="Инвентарь")
-#     item = models.ForeignKey('Item', on_delete=models.CASCADE, verbose_name="Предмет")
-#     quantity = models.PositiveIntegerField(default=0, verbose_name="Количество")
-#
-#     def __str__(self):
-#         return f"{self.item.name} in {self.inventory.user.username}'s inventory"
-#
-#     class Meta:
-#         verbose_name = "Элемент инвентаря"
-#         verbose_name_plural = "Элементы инвентаря"
 
 
 class TradeOffer(models.Model):
