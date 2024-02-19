@@ -1,10 +1,22 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from .services import *
 from .serializers import *
 from barter.helper import query_debugger
 # Create your views here.
+
+
+class ItemsView(ListAPIView):
+    permission_classes = (IsAuthenticated, )
+    queryset = Item.objects.all()
+    serializer_class = ItemsSerializer
+
+    def get(self, _):
+        queryset = self.get_queryset()
+        serializer = ItemsSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class TradeOffersView(APIView):

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import transaction
-from .utilities import delete_item_from_users_inv
 from trade.models import Item, Inventory, TradeOffer
+from trade.services.utilities import enough_items
 
 
 @transaction.atomic
@@ -15,13 +15,10 @@ def addoffer(data: dict, user_id: int) -> dict:
     if difference < 0:
         return {'status': 'error: not enough quantity'}
 
-    if difference == 0:
-        delete_item_from_users_inv(user_id, data.get('item_offered_id'))
-    else:
-        Inventory.objects.filter(
-            user__pk=user_id,
-            item__pk=data.get('item_offered_id')
-        ).update(quantity=difference)
+    Inventory.objects.filter(
+        user_id=user_id,
+        item_id=data.get('item_offered_id')
+    ).update(quantity=difference)
 
     TradeOffer.objects.create(
         user=User.objects.get(pk=user_id),

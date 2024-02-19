@@ -1,7 +1,6 @@
-from trade.models import Inventory, Item, TradeOffer
+from trade.models import TradeOffer, Inventory
 from trade.serializers import PurchaseSerializer
 from trade.services.utilities import \
-    item_in_inventory, \
     enough_items, \
     give_item_to_user, \
     delete_offer, \
@@ -9,14 +8,13 @@ from trade.services.utilities import \
 from django.db import transaction
 
 
-
 @transaction.atomic
 def purchase(data: PurchaseSerializer.validated_data, buyer_id: int) -> str:
-    offer = TradeOffer.objects.select_related('user', 'item').values().get(pk=data.get('offer_id'))
+    offer = TradeOffer.objects.select_for_update().values().get(pk=data.get('offer_id'))
 
     #Проверяем есть ли у покупателя чем платить
-    if not item_in_inventory(user_id=buyer_id, item_id=offer.get('item_requested_id')):
-        return 'the user does not have enough funds'
+    # if not item_in_inventory(user_id=buyer_id, item_id=offer.get('item_requested_id')):
+    #     return 'the user does not have enough funds'
 
     if not enough_items(
         user_id=buyer_id,

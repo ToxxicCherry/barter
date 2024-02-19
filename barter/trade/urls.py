@@ -8,6 +8,7 @@ urlpatterns = [
     path('api/v1/addoffer/', AddOffer.as_view()),
     path('api/v1/canceloffer/', CancelOffer.as_view()),
     path('api/v1/purchase/', Purchase.as_view()),
+    path('api/v1/items', ItemsView.as_view()),
     re_path(r'^api/v1/auth/', include('djoser.urls')),
     re_path(r'^api/v1/auth/', include('djoser.urls.authtoken')),
 ]

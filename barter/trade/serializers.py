@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from trade.models import Inventory
+from trade.models import Item
 
 
 class TradeOffersSerializer(serializers.Serializer):
@@ -40,6 +40,9 @@ class UserInventorySerializer(serializers.Serializer):
     pk = serializers.IntegerField()
     item__name = serializers.CharField()
     quantity = serializers.IntegerField()
-    # class Meta:
-    #     model = Inventory
-    #     fields = '__all__'
+
+
+class ItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = '__all__'
